@@ -23,8 +23,12 @@ Methods and what they do
 
 Telemetry- Collects data real-time (Data includes: Crash logs, user activity, performance, etc.)
 Telemetry.addData- Adds the output of the code into the console log
-
-
+=========================================
+DATA
+String- A class that stores the literal words and letters
+Int- type of var that stores numbers
+Double- Stores float numbers (decimal)
+Boolean- True/False information
 =========================================
 Common Errors
 
