@@ -17,22 +17,41 @@ Init_loop() - Runs repeatedly after Driver presses "INIT" but stops when Driver 
 Start() - Runs once when Driver presses "PLAY"
 Stop() - Runs once when Driver presses "STOP"
 --------------------------------------
-
+String- A class that stores the literal words and letters
+Int- type of var that stores numbers
+Double- Stores float numbers (decimal)
+Boolean- True/False information
 =========================================
 Methods and what they do
 
 Telemetry- Collects data real-time (Data includes: Crash logs, user activity, performance, etc.)
 Telemetry.addData- Adds the output of the code into the console log
 =========================================
-DATA
-String- A class that stores the literal words and letters
-Int- type of var that stores numbers
-Double- Stores float numbers (decimal)
-Boolean- True/False information
-=========================================
 Common Errors
 
 -Java is Case Sensitive
+
+=======================================
+THE GAMEPAD (Make sure it is in X mode)
+
+-On the trigger buttons, there is an analog that will be given a value when...
+    -If pressed all the way in, gives analog of 1
+    -If not pressed, gives analog of 0
+-If you hold in between, analog will be a decimal number between 0 and 1 like 0.50, 0.25, and 0.75
+
+
+-The joysticks have 2 analogs, one for the y-axis, and one for the x-axis
+    -When pushed up, the y-analog will be -1
+    -When pushed down, the y-analog will be 1
+    -When pushed left, the x-analog will be -1
+    -When pushed right, the x-analog will be 1
+When the joystick is in the middle, the analog will be 0
+
+
+
+
+
+
 
 
 
