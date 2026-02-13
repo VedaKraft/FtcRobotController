@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@Disabled //The code is disabled, will not show up oon D. Station until this is removed
+@Disabled //The code is disabled, will not show up on D. Station until this is removed
 
 
 @TeleOp   //The function that tells hub its a TeleOp code. Most important code in Onbot Java.

@@ -28,8 +28,8 @@ public class IfPractice extends OpMode {
 
         double leftY = gamepad1.left_stick_y;
 
-        if (leftY < 0) {
-            telemetry.addData("Left Stick", "is Negative");
+        if (leftY < 0.1 && leftY > -0.1) {
+            telemetry.addData("Left Stick", "in Dead Zone (Middle)");
         }
         else if (leftY > 0) {
             telemetry.addData("Left Stick", "is Positive");
@@ -38,6 +38,17 @@ public class IfPractice extends OpMode {
             telemetry.addData("Left Stick", "is 0");
         }
         telemetry.addData("Left Stick Value", leftY);
-    }
 
+        boolean Boost = gamepad1.a;
+        float motorSpeed = 2;
+
+        if(!Boost) {
+            motorSpeed *= 0.5;
+
+        }
+        else{
+            motorSpeed = 2;
+        }
+        telemetry.addData("Boost", Boost, motorSpeed)
+    }
 }

@@ -4,13 +4,15 @@
 TERMINOLOGY
 
 Class - Group of code that is shared. All code in Java is inside of a class.
-Method - Group of code. Basically a set of instructions. Located inside a class
+Method - Group of code. Basically a set of instructions. Located inside a class. Mainly a function
 Package - Directory where you store your class files. Effectively a house address on a directory.
 Directory - a tree map that organizes files and other resources on a computer or network.
 String- A class that stores the literal words and letters
 Int- type of var that stores numbers
 Double- Stores float numbers (decimal)
 Boolean- True/False information
+Scope- Region in the class where a var is recognized (usually defined by the {} it was made in)
+
 =========================================
 Methods and what they do
 
@@ -26,6 +28,16 @@ Stop() - Runs once when Driver presses "STOP"
 --------------------------------------
 Telemetry- Collects data real-time (Data includes: Crash logs, user activity, performance, etc.)
 Telemetry.addData- Adds the output of the code into the console log
+
+&&- And comparator
+||- Or comparator
+!- Not comparator
+
+Return- The method will "borrow" data, modify it, and the return will "return" the data back to us for other code that need that data
+
+Public void- Class A can access this method even though it is located in Class B.
+Private void- Class A CANNOT access this method because it is in Class B
+
 =========================================
 THE GAMEPAD (Make sure it is in X mode)
 
