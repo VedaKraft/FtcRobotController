@@ -38,6 +38,7 @@ Return- The method will "borrow" data, modify it, and the return will "return" t
 Public void- Class A can access this method even though it is located in Class B.
 Private void- Class A CANNOT access this method because it is in Class B
 
+Constructor Method- A function
 =========================================
 THE GAMEPAD (Make sure it is in X mode)
 
