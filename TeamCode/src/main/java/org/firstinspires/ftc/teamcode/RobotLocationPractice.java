@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class RobotLocationPractice{
-
-
+//QUESTION
     double angle;
 
     // Constructor Method
@@ -25,8 +24,5 @@ public class RobotLocationPractice{
     }
     public void setAngle(double angle){
         this.angle=angle;
-
     }
-
-
 }
