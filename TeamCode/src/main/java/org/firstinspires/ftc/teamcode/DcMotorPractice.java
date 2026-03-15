@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.mechanisms.TestBench1;
+import org.firstinspires.ftc.teamcode.mechanisms.TestBenchDCMotor;
 
 public class DcMotorPractice extends OpMode {
-    TestBench1 bench =new TestBench1();
+    TestBenchDCMotor bench =new TestBenchDCMotor();
 
     @Override
     public void init() {

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.mechanisms;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class TestBench1 {
+public class TestBenchDCMotor {
     private DcMotor motor; //linearSlideMotor0
 
     public void init(HardwareMap hwMap) {
