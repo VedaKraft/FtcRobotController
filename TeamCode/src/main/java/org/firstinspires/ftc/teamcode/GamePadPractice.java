@@ -25,7 +25,7 @@ public class GamePadPractice extends OpMode {
 
         telemetry.addData("x", speedSideL);
         telemetry.addData("y", speedForwardL);
-        telemetry.addData("turn", turnForce)
+        telemetry.addData("turn", turnForce);
         telemetry.addData("a button", gamepad1.a);
         telemetry.addData("b button", gamepad1.b);
         telemetry.addData("X-Joystick Difference", Difference);

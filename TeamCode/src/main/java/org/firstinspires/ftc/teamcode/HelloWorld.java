@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class HelloWorld extends OpMode {   //States class then extends (adds details) to the func.
     @Override    //Deletes the included initializing code so we can write our own
     public void init() {
-        telemetry.addData("Hello", "Vedant");   //Prints Hello with World
+        telemetry.addData("Hello", "Vedant"); //prints hello with vedant
     }
 
     @Override

@@ -9,7 +9,7 @@ public class DcMotorPractice extends OpMode {
 
     @Override
     public void init() {
-        bench.init(HardwareMap);
+        bench.init(hardwareMap);
     }
 
     @Override

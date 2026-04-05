@@ -54,6 +54,12 @@ THE GAMEPAD (Make sure it is in X mode)
     -When pushed left, the x-analog will be -1
     -When pushed right, the x-analog will be 1
 When the joystick is in the middle, the analog will be 0
+------------------------------------------------------------
+-Positional Servos: These move to and maintain a specific angle set in your code (e.g., 0° to 180°).
+When you command a specific position, the servo will attempt to rotate to that exact angle and stay there.
+
+-Continuous Rotational Servos: These do not have fixed positions in space. Instead, they spin constantly in either direction.
+When you program them, you are controlling their speed and direction rather than an angle.
 
 
 
