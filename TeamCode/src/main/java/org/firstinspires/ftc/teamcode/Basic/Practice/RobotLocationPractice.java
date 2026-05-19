@@ -1,7 +1,4 @@
-package org.firstinspires.ftc.teamcode;
-
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+package org.firstinspires.ftc.teamcode.Basic.Practice;
 
 public class RobotLocationPractice{
 //QUESTION

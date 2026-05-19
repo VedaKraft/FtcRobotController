@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode; //The package name
+package org.firstinspires.ftc.teamcode.Basic; //The package name
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
