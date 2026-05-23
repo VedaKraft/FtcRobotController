@@ -19,14 +19,10 @@ public class AprilTagLimelightTest extends OpMode {
     private Limelight3A limelight;
     private IMU imu;
 
-    // TODO: Tune this constant! Stand a known distance away,
-    // and solve: K = KnownDistance * Math.sqrt(TargetArea)
-    private static final double K_CONSTANT = 12.0;
-
     @Override
     public void init() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(8); // april tag #11 pipeline
+        limelight.pipelineSwitch(8); // AprilTag pipeline
         imu = hardwareMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(
@@ -38,45 +34,53 @@ public class AprilTagLimelightTest extends OpMode {
 
     @Override
     public void start() {
-        limelight.start(); // If slow, put into "init" (CAUSES BATTERY DRAIN)
+        limelight.start();   //Move to init if much slower, but will drain battery faster
     }
 
     @Override
     public void loop() {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-
-        // FIX: Added AngleUnit.DEGREES
         limelight.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
 
         LLResult llResult = limelight.getLatestResult();
         if (llResult != null && llResult.isValid()) {
             Pose3D botPose = llResult.getBotpose_MT2();
-            double ta = llResult.getTa(); // Extract the target area percentage
 
             telemetry.addData("Target x", llResult.getTx());
             telemetry.addData("Target y", llResult.getTy());
-            telemetry.addData("Target area", ta);
             telemetry.addData("BotPose", botPose.toString());
-
-            // --- NEW: Area-Based Distance Calculation ---
-            if (ta > 0.0) {
-                double distance = K_CONSTANT / Math.sqrt(ta);
-                telemetry.addData("Area Distance", "%.2f units", distance);
-            } else {
-                telemetry.addData("Area Distance", "No valid target area");
-            }
-            // --------------------------------------------
-
-            // FIX: Added AngleUnit.DEGREES
             telemetry.addData("Yaw", botPose.getOrientation().getYaw(AngleUnit.DEGREES));
 
-            // FIX: Changed 'result' to 'llResult'
             List<LLResultTypes.FiducialResult> fiducials = llResult.getFiducialResults();
 
             for (LLResultTypes.FiducialResult fiducial : fiducials) {
-                int tagID = fiducial.getFiducialId(); // This gets the AprilTag ID
+                int tagID = fiducial.getFiducialId();
                 telemetry.addData("Detected Tag ID", tagID);
+
+                Pose3D targetPoseCamera = fiducial.getTargetPoseCameraSpace();
+
+                if (targetPoseCamera != null) {
+
+                    double x = targetPoseCamera.getPosition().x;
+                    double y = targetPoseCamera.getPosition().y;
+                    double z = targetPoseCamera.getPosition().z;
+
+
+                    double directDistanceMeters = Math.sqrt(x*x + y*y + z*z);
+
+                    // Convert to inches
+                    double forwardInches = z * 39.3701;
+                    double directInches = directDistanceMeters * 39.3701;
+
+                    telemetry.addData("Tag " + tagID + " Forward (Inches)", "%.2f", forwardInches);
+                    telemetry.addData("Tag " + tagID + " Direct (Inches)", "%.2f", directInches);
+                } else {
+                    telemetry.addData("Tag " + tagID, "No 3D pose data available");
+                }
+
             }
+        } else {
+            telemetry.addData("Limelight", "No valid targets seen");
         }
     }
 }
