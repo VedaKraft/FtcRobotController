@@ -34,6 +34,21 @@ public class DCMOTORS extends LinearOpMode {
             leftFront.setPower(0);
 // Reset it back to normal mode
             leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//--------------------------------------------------------------------------------------------
+            rightFront.setTargetPosition(1000);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setPower(0.5);
+
+// Keep the robot waiting until the motor reaches 1000 ticks
+            while (opModeIsActive() && rightFront.isBusy()) {
+                telemetry.addData("Status", "Driving to position...");
+                telemetry.update();
+            }
+
+// STOP the motor when it arrives
+            rightFront.setPower(0);
+// Reset it back to normal mode
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 }
