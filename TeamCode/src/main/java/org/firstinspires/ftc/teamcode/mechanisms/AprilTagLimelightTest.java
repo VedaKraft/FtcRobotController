@@ -19,6 +19,11 @@ public class AprilTagLimelightTest extends OpMode {
     private Limelight3A limelight;
     private IMU imu;
 
+
+    private final double Kp = 0.015;
+    private final double TOLERANCE_DEGREES = 1.5;
+    private final double MIN_TURNING_POWER = 0.05; //accounts for friction
+
     @Override
     public void init() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
