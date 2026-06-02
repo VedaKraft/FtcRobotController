@@ -52,6 +52,7 @@ public class AprilTagLimelightTest extends OpMode {
         LLResult llResult = limelight.getLatestResult();
         if (llResult != null && llResult.isValid()) {
             Pose3D botPose = llResult.getBotpose_MT2();
+            double tx = llResult.getTx();
 
             telemetry.addData("Target x", llResult.getTx());
             telemetry.addData("Target y", llResult.getTy());
