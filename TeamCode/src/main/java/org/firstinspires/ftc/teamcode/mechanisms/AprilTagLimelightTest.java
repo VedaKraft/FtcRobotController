@@ -37,11 +37,13 @@ public class AprilTagLimelightTest extends OpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
 
         imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+
+
     }
 
     @Override
     public void start() {
-        limelight.start();   //Move to init if much slower, but will drain battery faster
+        limelight.start();
     }
 
     @Override
@@ -50,45 +52,56 @@ public class AprilTagLimelightTest extends OpMode {
         limelight.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
 
         LLResult llResult = limelight.getLatestResult();
+        double turnPower = 0.0;
+
         if (llResult != null && llResult.isValid()) {
             Pose3D botPose = llResult.getBotpose_MT2();
             double tx = llResult.getTx();
 
-            telemetry.addData("Target x", llResult.getTx());
+            telemetry.addData("Target x", tx);
             telemetry.addData("Target y", llResult.getTy());
             telemetry.addData("BotPose", botPose.toString());
             telemetry.addData("Yaw", botPose.getOrientation().getYaw(AngleUnit.DEGREES));
 
-            List<LLResultTypes.FiducialResult> fiducials = llResult.getFiducialResults();
+            if (Math.abs(tx) > TOLERANCE_DEGREES) {
+                // Proportional calculation
+                turnPower = tx * Kp;
 
+                if (turnPower > 0) turnPower += MIN_TURNING_POWER;
+                else turnPower -= MIN_TURNING_POWER;
+
+
+                turnPower = Math.max(-0.4, Math.min(0.4, turnPower));
+            } else {
+                turnPower = 0.0;
+            }
+
+            List<LLResultTypes.FiducialResult> fiducials = llResult.getFiducialResults();
             for (LLResultTypes.FiducialResult fiducial : fiducials) {
                 int tagID = fiducial.getFiducialId();
                 telemetry.addData("Detected Tag ID", tagID);
-
                 Pose3D targetPoseCamera = fiducial.getTargetPoseCameraSpace();
 
                 if (targetPoseCamera != null) {
-
                     double x = targetPoseCamera.getPosition().x;
                     double y = targetPoseCamera.getPosition().y;
                     double z = targetPoseCamera.getPosition().z;
 
-
                     double directDistanceMeters = Math.sqrt(x*x + y*y + z*z);
-
-                    // Convert to inches
                     double forwardInches = z * 39.3701;
                     double directInches = directDistanceMeters * 39.3701;
 
                     telemetry.addData("Tag " + tagID + " Forward (Inches)", "%.2f", forwardInches);
                     telemetry.addData("Tag " + tagID + " Direct (Inches)", "%.2f", directInches);
-                } else {
-                    telemetry.addData("Tag " + tagID, "No 3D pose data available");
                 }
-
             }
         } else {
-            telemetry.addData("Limelight", "No valid targets seen");
+            telemetry.addData("Limelight", "No targets seen");
+            turnPower = 0.0;
         }
+
+        telemetry.addData("Calculated Turn Action", "%.3f", turnPower);
+
+
     }
 }
