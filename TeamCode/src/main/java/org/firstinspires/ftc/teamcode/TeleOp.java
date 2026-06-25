@@ -1,51 +1,52 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Fast Lane: Drive Code", group="Linear OpMode")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="VedantTeleOp", group="Linear OpMode")
 public class TeleOp extends LinearOpMode {
 
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor leftFront = null;
+    private DcMotor leftBack = null;
+    private DcMotor rightFront = null;
+    private DcMotor rightBack = null;
 
     @Override
     public void runOpMode() {
         telemetry.update();
 
+        leftFront = hardwareMap.get(DcMotor.class, "left_front");
+        leftBack = hardwareMap.get(DcMotor.class, "left_back");
+        rightFront = hardwareMap.get(DcMotor.class, "right_front");
+        rightBack = hardwareMap.get(DcMotor.class, "right_back");
 
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
-
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
 
-
         while (opModeIsActive()) {
+            double y = -gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x;
+            double rx = gamepad1.right_stick_x;
 
+            double frontLeftPower = y + x + rx;
+            double backLeftPower = y - x + rx;
+            double frontRightPower = y - x - rx;
+            double backRightPower = y + x - rx;
 
-            double drive = -gamepad1.left_stick_y;
-            double turn  = gamepad1.right_stick_x;
+            frontLeftPower = Range.clip(frontLeftPower, -1.0, 1.0);
+            backLeftPower = Range.clip(backLeftPower, -1.0, 1.0);
+            frontRightPower = Range.clip(frontRightPower, -1.0, 1.0);
+            backRightPower = Range.clip(backRightPower, -1.0, 1.0);
 
-
-            double leftPower    = drive + turn;
-            double rightPower   = drive - turn;
-
-
-            leftPower = Range.clip(leftPower, -1.0, 1.0);
-            rightPower = Range.clip(rightPower, -1.0, 1.0);
-
-
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
-
-
+            leftFront.setPower(frontLeftPower);
+            leftBack.setPower(backLeftPower);
+            rightFront.setPower(frontRightPower);
+            rightBack.setPower(backRightPower);
         }
     }
 }

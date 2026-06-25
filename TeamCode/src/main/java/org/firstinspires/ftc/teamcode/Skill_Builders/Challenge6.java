@@ -1,0 +1,118 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@Autonomous(name="Challenge6", group="Robot")
+public class Challenge6 extends LinearOpMode {
+
+    private DcMotor leftFront  = null;
+    private DcMotor rightFront = null;
+    private DcMotor leftRear   = null;
+    private DcMotor rightRear  = null;
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    static final double COUNTS_PER_MOTOR_REV    = 537.7;
+    static final double DRIVE_GEAR_REDUCTION    = 1.0;
+    static final double WHEEL_DIAMETER_INCHES   = 3.77953;
+    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.14159);
+
+    static final double STRAIGHT_DISTANCE_INCHES = 115.0;
+    static final double TURN_DISTANCE_INCHES     = 14.5;
+
+    @Override
+    public void runOpMode() {
+
+        leftFront  = hardwareMap.get(DcMotor.class, "leftFront");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        leftRear   = hardwareMap.get(DcMotor.class, "leftRear");
+        rightRear  = hardwareMap.get(DcMotor.class, "rightRear");
+
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftRear.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
+
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.addData("Status", "Ready to trace perimeter. Place robot facing along a wall.");
+        telemetry.update();
+
+        waitForStart();
+
+        for (int side = 1; side <= 4; side++) {
+            if (!opModeIsActive()) break;
+
+            telemetry.addData("Action", "Driving Side %d / 4", side);
+            telemetry.update();
+            encoderDrive(0.5, STRAIGHT_DISTANCE_INCHES, STRAIGHT_DISTANCE_INCHES, 7.0);
+
+            sleep(300);
+
+            if (!opModeIsActive()) break;
+
+            telemetry.addData("Action", "Turning Corner %d / 4", side);
+            telemetry.update();
+            encoderDrive(0.4, TURN_DISTANCE_INCHES, -TURN_DISTANCE_INCHES, 4.0);
+
+            sleep(300);
+        }
+
+        telemetry.addData("Status", "Path Complete!");
+        telemetry.update();
+    }
+
+    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
+        int newLeftFrontTarget;
+        int newLeftRearTarget;
+        int newRightFrontTarget;
+        int newRightRearTarget;
+
+        if (opModeIsActive()) {
+            newLeftFrontTarget  = leftFront.getCurrentPosition()  + (int)(leftInches * COUNTS_PER_INCH);
+            newLeftRearTarget   = leftRear.getCurrentPosition()   + (int)(leftInches * COUNTS_PER_INCH);
+            newRightFrontTarget = rightFront.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRightRearTarget  = rightRear.getCurrentPosition()  + (int)(rightInches * COUNTS_PER_INCH);
+
+            leftFront.setTargetPosition(newLeftFrontTarget);
+            leftRear.setTargetPosition(newLeftRearTarget);
+            rightFront.setTargetPosition(newRightFrontTarget);
+            rightRear.setTargetPosition(newRightRearTarget);
+
+            setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+            leftFront.setPower(Math.abs(speed));
+            leftRear.setPower(Math.abs(speed));
+            rightFront.setPower(Math.abs(speed));
+            rightRear.setPower(Math.abs(speed));
+
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) &&
+                    (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy())) {
+
+                telemetry.addData("Running to",  "L: %7d, R: %7d", newLeftFrontTarget, newRightFrontTarget);
+                telemetry.addData("Current Pos", "LF: %7d, RF: %7d", leftFront.getCurrentPosition(), rightFront.getCurrentPosition());
+                telemetry.update();
+            }
+
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(0);
+            rightRear.setPower(0);
+
+            setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    private void setMotorMode(DcMotor.RunMode mode) {
+        leftFront.setMode(mode);
+        rightFront.setMode(mode);
+        leftRear.setMode(mode);
+        rightRear.setMode(mode);
+    }
+}
