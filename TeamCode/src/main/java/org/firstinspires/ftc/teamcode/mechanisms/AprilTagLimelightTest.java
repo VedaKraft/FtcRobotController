@@ -6,9 +6,9 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -22,14 +22,19 @@ public class AprilTagLimelightTest extends OpMode {
     private IMU imu;
 
 
+    private DcMotor frontLeft;
+    private DcMotor frontRight;
+    private DcMotor backLeft;
+    private DcMotor backRight;
+
     private final double Kp = 0.015;
     private final double TOLERANCE_DEGREES = 1.5;
-    private final double MIN_TURNING_POWER = 0.05; //accounts for friction
+    private final double MIN_TURNING_POWER = 0.05;
 
     @Override
     public void init() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(8); // AprilTag pipeline
+        limelight.pipelineSwitch(8);
         imu = hardwareMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(
@@ -39,6 +44,20 @@ public class AprilTagLimelightTest extends OpMode {
         imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
 
 
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
+
+
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -64,7 +83,7 @@ public class AprilTagLimelightTest extends OpMode {
             telemetry.addData("Yaw", botPose.getOrientation().getYaw(AngleUnit.DEGREES));
 
             if (Math.abs(tx) > TOLERANCE_DEGREES) {
-                // Proportional calculation
+
                 turnPower = tx * Kp;
 
                 if (turnPower > 0) turnPower += MIN_TURNING_POWER;
@@ -100,8 +119,12 @@ public class AprilTagLimelightTest extends OpMode {
             turnPower = 0.0;
         }
 
-        telemetry.addData("Calculated Turn Action", "%.3f", turnPower);
 
+        frontLeft.setPower(turnPower);
+        backLeft.setPower(turnPower);
+        frontRight.setPower(-turnPower);
+        backRight.setPower(-turnPower);
 
+        telemetry.addData("Calc. Turn", "%.3f", turnPower);
     }
 }
